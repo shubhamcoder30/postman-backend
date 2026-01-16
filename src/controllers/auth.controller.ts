@@ -97,10 +97,10 @@ export class AuthController {
      * POST /api/auth/reset-password
      */
     static resetPassword = asyncHandler(async (req: Request, res: Response) => {
-        const { otp, newPassword } = req.body;
+        const { email, otp, newPassword } = req.body;
 
         try {
-            await AuthService.resetPassword(otp, newPassword);
+            await AuthService.resetPassword(email, otp, newPassword);
             return sendSuccess(res, null, AUTH_MESSAGES.PASSWORD_RESET_SUCCESS);
         } catch (error: any) {
             if (error.message === AUTH_MESSAGES.INVALID_TOKEN) {

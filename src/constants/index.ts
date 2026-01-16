@@ -11,7 +11,7 @@ export const HTTP_STATUS = {
 
 // Database Configuration
 export const DB_CONFIG = {
-    SYNC_ALTER: true,
+    SYNC_ALTER: false,
     SYNC_FORCE: false,
 } as const;
 

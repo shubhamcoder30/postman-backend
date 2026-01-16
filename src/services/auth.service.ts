@@ -135,13 +135,22 @@ export class AuthService {
     /**
      * Reset password with OTP
      */
-    static async resetPassword(otp: string, newPassword: string): Promise<void> {
-        // Find user with valid OTP
+    static async resetPassword(email: string, otp: string, newPassword: string): Promise<void> {
+        console.log('Reset password attempt for:', email, 'with OTP:', otp);
+
+        // Find user with valid OTP and email
         const user = await User.findOne({
             where: {
+                email,
                 otp,
             },
         });
+
+        console.log('User found for reset:', user ? 'Yes' : 'No');
+        if (user) {
+            console.log('User OTP Expiry:', user.otpExpiry);
+            console.log('Current Date:', new Date());
+        }
 
         if (!user || !user.otpExpiry) {
             throw new Error(AUTH_MESSAGES.INVALID_TOKEN);

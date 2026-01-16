@@ -16,7 +16,10 @@ export class DatabaseService {
             console.log(SUCCESS_MESSAGES.DB_CONNECTED);
 
             // Sync models (creates tables if they don't exist)
-            await sequelize.sync({ alter: true });
+            await sequelize.sync({
+                alter: DB_CONFIG.SYNC_ALTER,
+                force: DB_CONFIG.SYNC_FORCE
+            });
             console.log(SUCCESS_MESSAGES.DB_SYNCED);
         } catch (error) {
             console.error(ERROR_MESSAGES.DB_CONNECTION_FAILED, error);
