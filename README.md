@@ -1,66 +1,102 @@
-# Postman Clone - Backend (Server)
+# Postman Clone - Server Application
 
-This is the backend server for the Postman Clone application, built with Node.js, Express, and Sequelize ORM.
+The backend API for the Postman Clone, built with **Node.js**, **Express**, and **TypeScript**. It handles authentication, data persistence, request proxying, and real-time socket events.
 
-## Tech Stack
+## 🛠️ Tech Stack
+
 - **Runtime**: Node.js
 - **Framework**: Express.js
-- **ORM**: Sequelize
-- **Database**: MySQL 
-- **Authentication**: JWT (JSON Web Tokens)
-- **Language**: TypeScript
+- **Database**: MySQL 8.0
+- **ORM**: Sequelize (TypeScript)
+- **Authentication**: JWT (JSON Web Tokens), BCrypt
+- **Real-Time**: Socket.IO
+- **Validation**: Manual input validation / Middleware
 
-## Prerequisites
-- Node.js (v18 or higher recommended)
-- npm or yarn
-- A running MySQL instance (local or RDS)
+## 📂 Directory Structure
 
-## Getting Started
-
-### 1. Installation
-Navigate to the server directory and install dependencies:
-```bash
-npm install
+```
+src/
+├── constants/          # App-wide constants (HTTP codes, config)
+├── controllers/        # Route logic (Auth, Collection, Request)
+├── middleware/         # Express middleware (Auth, Error handling)
+├── models/             # Sequelize models
+│   ├── entities/       # Individual model definitions (User, Request...)
+│   └── index.ts        # Association setup
+├── routes/             # API route definitions
+├── services/           # Business logic layer
+└── utils/              # Helper functions (JWT, error formatters)
 ```
 
-### 2. Environment Configuration
-Create a `.env` file in the `server` root directory and configure the following variables:
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js (v18+)
+- MySQL Server
+
+### Installation
+
+1.  Navigate to the server directory:
+    ```bash
+    cd server
+    ```
+
+2.  Install dependencies:
+    ```bash
+    npm install
+    ```
+
+### Configuration
+
+Create a `.env` file in the root of the `server` directory:
+
 ```env
 PORT=3000
-MYSQL_HOST=your-database-host
-MYSQL_PORT=3306
-MYSQL_DATABASE=postman_clone
-MYSQL_USER=your-username
-MYSQL_PASSWORD=your-password
-JWT_SECRET=your-secret-key
+DB_HOST=localhost
+DB_USER=root
+DB_PASS=password
+DB_NAME=postman_clone
+JWT_SECRET=your_super_secret_key
+JWT_EXPIRES_IN=7d
+CORS_ORIGIN=*
 ```
 
-### 3. Database Setup
-Ensure that the database specified in `MYSQL_DATABASE` exists. The application uses Sequelize's `sync()` method to create tables automatically on startup.
+### Database Setup
 
-### 4. Running the Server
+The application uses **Sequelize** to manage the database.
+- Ensure your MySQL server is running.
+- The app will automatically sync models on startup (`sequelize.sync()`).
+- *Note: `SYNC_ALTER` is set to `false` in `constants/index.ts` to prevent data loss. Change to `true` if you need auto-migrations during dev.*
 
-#### Development Mode (Hot Reload)
+### Running the Server
+
+Start the development server with hot-reload:
+
 ```bash
 npm run dev
 ```
 
-#### Production Mode
-```bash
-npm run build
-npm start
-```
+The server will start on `http://localhost:3000`.
 
-## API Features
-- **Authentication**: Signup, Login, and Profile management.
-- **Collections**: Create, Read, Update, and Delete API collections.
-- **Requests**: Manage HTTP requests within collections.
-- **Environments**: Support for environment-specific variables.
-- **History**: Tracking of past API requests.
+## 🔌 API Proxy Logic
 
-## Project Structure
-- `src/controllers`: Logic for handling API requests.
-- `src/models`: Database models defined using Sequelize.
-- `src/routes`: API route definitions.
-- `src/middleware`: Custom middleware for authentication and logging.
-- `src/index.ts`: Application entry point.
+One of the key features is the **Proxy Endpoint** (`/api/proxy`).
+- **Purpose**: To bypass CORS restrictions when the frontend makes requests to external APIs.
+- **Flow**:
+  1. Client sends request details (URL, Method, Headers, Body) to `/api/proxy`.
+  2. Server reconstructs the request using `axios`.
+  3. Server sends the request to the target URL.
+  4. Server captures the response (Status, Data, Headers) and sends it back to the Client.
+
+## ⚡ Socket.IO Integration
+
+The server runs a Socket.IO instance alongside Express.
+- **Connection**: Accepts connections from any origin (configured in `index.ts`).
+- **Events**:
+  - Emits `test-event` every 5 seconds for connection testing.
+  - Can be expanded to handle custom rooms/namespaces for collaborative features.
+
+## 📜 Scripts
+
+- `npm run dev`: Start dev server with `ts-node-dev`.
+- `npm start`: Start production server (requires build).
+- `npm run build`: Compile TypeScript to JavaScript (`dist/`).
