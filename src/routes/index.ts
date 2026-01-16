@@ -5,6 +5,7 @@ import authRoutes from './auth.routes';
 
 import collectionRoutes from './collection.routes';
 import requestRoutes from './request.routes';
+import environmentRoutes from './environment.routes';
 
 const router = Router();
 
@@ -14,6 +15,7 @@ router.use('/', proxyRoutes);
 router.use('/auth', authRoutes);
 router.use('/collections', collectionRoutes);
 router.use('/requests', requestRoutes);
+router.use('/environments', environmentRoutes);
 
 export default router;
 

@@ -12,6 +12,11 @@ const sequelize = new Sequelize({
     password: process.env.MYSQL_PASSWORD || '',
     database: process.env.MYSQL_DATABASE || 'postman_clone',
     logging: false,
+    dialectOptions: process.env.MYSQL_SSL === 'true' ? {
+        ssl: {
+            rejectUnauthorized: false
+        }
+    } : {}
 });
 
 // User Model
@@ -74,6 +79,7 @@ interface CollectionAttributes {
     id: number;
     name: string;
     userId: number;
+    variables?: any;
     createdAt?: Date;
     updatedAt?: Date;
 }
@@ -84,6 +90,7 @@ export class Collection extends Model<CollectionAttributes, CollectionCreationAt
     declare public id: number;
     declare public name: string;
     declare public userId: number;
+    declare public variables: any;
     declare public readonly createdAt: Date;
     declare public readonly updatedAt: Date;
 }
@@ -102,6 +109,11 @@ Collection.init(
         userId: {
             type: DataTypes.INTEGER,
             allowNull: false,
+        },
+        variables: {
+            type: DataTypes.JSON,
+            allowNull: true,
+            defaultValue: [],
         },
     },
     {
