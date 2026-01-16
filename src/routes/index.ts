@@ -10,9 +10,9 @@ import environmentRoutes from './environment.routes';
 const router = Router();
 
 // Mount routes
+router.use('/auth', authRoutes);
 router.use('/', healthRoutes);
 router.use('/', proxyRoutes);
-router.use('/auth', authRoutes);
 router.use('/collections', collectionRoutes);
 router.use('/requests', requestRoutes);
 router.use('/environments', environmentRoutes);
