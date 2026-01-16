@@ -173,6 +173,8 @@ interface RequestAttributes {
     headers?: object;
     body?: object;
     bodyType: string;
+    type: string;
+    preRequestScript?: string;
     auth?: object;
     collectionId?: number;
     folderId?: number;
@@ -181,7 +183,7 @@ interface RequestAttributes {
     updatedAt?: Date;
 }
 
-interface RequestCreationAttributes extends Optional<RequestAttributes, 'id' | 'isFavorite' | 'createdAt' | 'updatedAt' | 'bodyType'> { }
+interface RequestCreationAttributes extends Optional<RequestAttributes, 'id' | 'isFavorite' | 'createdAt' | 'updatedAt' | 'bodyType' | 'type'> { }
 
 export class Request extends Model<RequestAttributes, RequestCreationAttributes> implements RequestAttributes {
     declare public id: number;
@@ -191,6 +193,8 @@ export class Request extends Model<RequestAttributes, RequestCreationAttributes>
     declare public headers?: object;
     declare public body?: object;
     declare public bodyType: string;
+    declare public type: string;
+    declare public preRequestScript?: string;
     declare public auth?: object;
     declare public collectionId?: number;
     declare public folderId?: number;
@@ -234,6 +238,14 @@ Request.init(
         bodyType: {
             type: DataTypes.STRING,
             defaultValue: 'none',
+        },
+        type: {
+            type: DataTypes.STRING,
+            defaultValue: 'http',
+        },
+        preRequestScript: {
+            type: DataTypes.TEXT,
+            allowNull: true,
         },
         auth: {
             type: DataTypes.JSON,

@@ -8,7 +8,7 @@ export class RequestController {
      * Create a new request
      */
     static create = asyncHandler(async (req: Request, res: Response) => {
-        const { collectionId, type, name, method, url, headers, body, bodyType, auth } = req.body;
+        const { collectionId, type, name, method, url, headers, body, bodyType, auth, preRequestScript } = req.body;
         const userId = (req as any).userId;
 
         let verifiedCollectionId: number | undefined = undefined;
@@ -30,6 +30,8 @@ export class RequestController {
             url: url || '',
             collectionId: verifiedCollectionId,
             bodyType: bodyType || 'none',
+            type: type || 'http',
+            preRequestScript: preRequestScript || '',
             headers: headers || [],
             body: body || {},
             auth: auth || { type: 'none' },
